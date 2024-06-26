@@ -4,8 +4,24 @@ import { Feather } from '@expo/vector-icons'
 import Search from '../screens/Search'
 import Favorite from '../screens/Favorite'
 import HomeStackNavigation from './HomeStackNavigation'
+import { RootStackParamList } from '../types/app'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import MovieDetail from '../screens/MovieDetail'
 
 const Tab = createBottomTabNavigator()
+
+const FavoriteStack = createNativeStackNavigator<RootStackParamList>()
+
+const FavoriteStackNavigator = (): JSX.Element => (
+  <FavoriteStack.Navigator initialRouteName="Favorite">
+    <FavoriteStack.Screen
+      name="Favorite"
+      component={Favorite}
+      options={{ headerShown: false }}
+    />
+    <FavoriteStack.Screen name="MovieDetail" component={MovieDetail} />
+  </FavoriteStack.Navigator>
+)
 
 const BottomTabNavigator = (): JSX.Element => (
   <Tab.Navigator>
@@ -30,8 +46,8 @@ const BottomTabNavigator = (): JSX.Element => (
       }}
     />
     <Tab.Screen
-      name="Favorite"
-      component={Favorite}
+      name="FavoriteStack"
+      component={FavoriteStackNavigator}
       options={{
         tabBarIcon: ({ color }) => (
           <Feather name="heart" size={28} color={color} />
