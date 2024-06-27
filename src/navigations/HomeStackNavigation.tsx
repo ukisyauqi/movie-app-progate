@@ -7,7 +7,7 @@ const Stack = createNativeStackNavigator()
 export default function HomeStackNavigation() {
   return (
     <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={Home} options={{ headerShown: false }}/>
+        <Stack.Screen name="HomeStack" component={Home} options={{ headerShown: false }}/>
         <Stack.Screen name="MovieDetail" component={MovieDetail} />
       </Stack.Navigator>
   )
