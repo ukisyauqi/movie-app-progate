@@ -50,5 +50,7 @@ export interface MovieItemProps {
 export type RootStackParamList = {
   Home: undefined
   MovieDetail: { id: number }
+  MoviesByGenre: { genreId: number }
   Favorite: undefined
+  Search: undefined
 }

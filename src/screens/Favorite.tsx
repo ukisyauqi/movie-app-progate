@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { View, StyleSheet, Text, FlatList, Dimensions } from 'react-native'
+import { View, StyleSheet, Text, FlatList } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Movie } from '../types/app'
 import MovieItem from '../components/movies/MovieItem'
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   movieItem: {
-    width: Dimensions.get('window').width / 3 - 12,
+    width: 110,
     height: 200,
     marginBottom: 16,
   },
