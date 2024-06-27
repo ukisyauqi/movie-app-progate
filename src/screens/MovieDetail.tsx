@@ -2,15 +2,24 @@
 import { API_ACCESS_TOKEN } from '@env'
 import { LinearGradient } from 'expo-linear-gradient'
 import React, { useEffect, useState } from 'react'
-import { ImageBackground, StyleSheet, Text, View } from 'react-native'
+import {
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
 import { Movie } from '../types/app'
 import MovieList from '../components/movies/MovieList'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const MovieDetail = ({ route }: any): JSX.Element => {
   const { id } = route.params
 
   const [movie, setMovie] = useState<Movie>()
+  const [isFavorite, setIsFavorite] = useState<boolean>(false)
 
   const fetchData = (): void => {
     // Gantilah dengan akses token Anda
@@ -36,9 +45,67 @@ const MovieDetail = ({ route }: any): JSX.Element => {
       })
   }
 
+  const addFavorite = async (movie: Movie): Promise<void> => {
+    try {
+      const initialData: string | null =
+        await AsyncStorage.getItem('@FavoriteList')
+      console.log(initialData)
+
+      let favMovieList: Movie[] = []
+
+      if (initialData !== null) {
+        favMovieList = [...JSON.parse(initialData), movie]
+      } else {
+        favMovieList = [movie]
+      }
+
+      await AsyncStorage.setItem('@FavoriteList', JSON.stringify(favMovieList))
+      setIsFavorite(true)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const removeFavorite = async (id: number): Promise<void> => {
+    try {
+      const initialData: string | null =
+        await AsyncStorage.getItem('@FavoriteList')
+      console.log(initialData)
+
+      if (initialData !== null) {
+        let favMovieList: Movie[] = JSON.parse(initialData)
+        favMovieList = favMovieList.filter((movie) => movie.id !== id)
+
+        await AsyncStorage.setItem(
+          '@FavoriteList',
+          JSON.stringify(favMovieList),
+        )
+        setIsFavorite(false)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const checkIsFavorite = async (id: number): Promise<boolean> => {
+    try {
+      const initialData: string | null =
+        await AsyncStorage.getItem('@FavoriteList')
+      if (initialData !== null) {
+        const favMovieList: Movie[] = JSON.parse(initialData)
+        return favMovieList.some((movie) => movie.id === id)
+      }
+      return false
+    } catch (error) {
+      console.log(error)
+      return false
+    }
+  }
+
   useEffect(() => {
     fetchData()
-  }, [])
+    checkIsFavorite(id).then((isFav) => setIsFavorite(isFav))
+  }, [id])
 
   return (
     <View
@@ -62,11 +129,27 @@ const MovieDetail = ({ route }: any): JSX.Element => {
               style={styles.gradientStyle}
             >
               <Text style={styles.movieTitle}>{movie.title}</Text>
-              <View style={styles.ratingContainer}>
-                <FontAwesome name="star" size={16} color="yellow" />
-                <Text style={styles.rating}>
-                  {movie.vote_average.toFixed(1)}
-                </Text>
+              <View style={styles.wrapper}>
+                <View style={styles.ratingContainer}>
+                  <FontAwesome name="star" size={16} color="yellow" />
+                  <Text style={styles.rating}>
+                    {movie.vote_average.toFixed(1)}
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  onPress={
+                    isFavorite
+                      ? () => removeFavorite(movie.id)
+                      : () => addFavorite(movie)
+                  }
+                >
+                  <FontAwesome
+                    name={isFavorite ? 'heart' : 'heart-o'}
+                    size={24}
+                    color="red"
+                    style={styles.heartIcon}
+                  />
+                </TouchableOpacity>
               </View>
             </LinearGradient>
           </ImageBackground>
@@ -106,9 +189,9 @@ const MovieDetail = ({ route }: any): JSX.Element => {
           </View>
 
           <MovieList
-            title={"Recomendation"}
+            title={'Recomendation'}
             path={`movie/${movie.id}/recommendations`}
-            coverType={"poster"}
+            coverType={'poster'}
             key={movie.title}
           />
         </>
@@ -146,6 +229,17 @@ const styles = StyleSheet.create({
   rating: {
     color: 'yellow',
     fontWeight: '700',
+  },
+  heartIcon: {
+    marginRight: 8,
+  },
+  wrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 8,
   },
 })
 

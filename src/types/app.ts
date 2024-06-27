@@ -44,4 +44,13 @@ export interface MovieItemProps {
   movie: Movie
   size: { width: number; height: number }
   coverType: 'poster' | 'backdrop'
+  onPress?: () => void
+}
+
+export type RootStackParamList = {
+  Home: undefined
+  MovieDetail: { id: number }
+  MoviesByGenre: { genreId: number }
+  Favorite: undefined
+  Search: undefined
 }
