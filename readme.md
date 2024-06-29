@@ -1,4 +1,4 @@
-# Tugas Akhir Progate React Native
+# Tugas Akhir Progate React Native Kelompok J
 
 ## Anggota Kelompok:
 - RAFLI AKMAL GUNAWAN
