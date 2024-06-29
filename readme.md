@@ -1,10 +1,10 @@
 # Tugas Akhir Progate React Native
 
 ## Anggota Kelompok:
-- RAFLI AKMAL GUNAWAN (non active)
+- RAFLI AKMAL GUNAWAN
 - MUHAMAD SYAUQI FADHLIKA (Ketua)
-- INDAH PARAMITHA (non active)
-- FACHRI BASHARAT (non active)
+- INDAH PARAMITHA
+- FACHRI BASHARAT
 - ANDYKA ADI PRATAMA (active)
 
 ## Pembagian Fitur
